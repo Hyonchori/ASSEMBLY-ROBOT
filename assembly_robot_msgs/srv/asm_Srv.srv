@@ -1,0 +1,7 @@
+string type
+Asm_test parent
+Asm_test child
+---
+bool result
+TransStamped asm_pose
+TransStamped[] holepin_pose

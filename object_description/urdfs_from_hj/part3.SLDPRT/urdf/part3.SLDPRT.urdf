@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="part3.SLDPRT">
+  <link
+    name="part3.SLDPRT">
+    <inertial>
+      <origin
+        xyz="-1.6524E-18 1.9536E-05 0.0099925"
+        rpy="0 0 0" />
+      <mass
+        value="0.26131" />
+      <inertia
+        ixx="6.3365E-05"
+        ixy="-1.8215E-20"
+        ixz="1.4204E-20"
+        iyy="0.0015168"
+        iyz="2.5564E-08"
+        izz="0.0015623" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://part3.SLDPRT/meshes/part3.SLDPRT.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+        <texture
+          filename="package://part3.SLDPRT/textures/" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://part3.SLDPRT/meshes/part3.SLDPRT.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

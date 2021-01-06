@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="C104322.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="C104322.SLDPRT">
+		<inertial>
+			<origin xyz="0.028536 -9.8755E-20 -7.8235E-20" rpy="0 0 0"></origin>
+			<mass value="0.0017863"></mass>
+			<inertia ixx="9.8797E-09" ixy="1.3179E-19" ixz="1.3179E-19" iyy="5.862E-07" iyz="2.2882E-25" izz="5.862E-07"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C104322.SLDPRT/meshes/C104322.SLDPRT.STL"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C104322.SLDPRT/meshes/C104322.SLDPRT.STL"></mesh>
+			</geometry>
+		</collision>
+	</link>
+	<link name="C104322 pin screw 1">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.056111111" radius="0.003"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="C104322 pin screw 1 joint" type="fixed">
+		<origin xyz="0.0319444445 0.0 0.0" rpy="-0.0 1.57079632679 0.0"></origin>
+		<parent link="C104322.SLDPRT"></parent>
+		<child link="C104322 pin screw 1"></child>
+	</joint>
+	<gazebo reference="C104322 pin screw 1">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+</robot>

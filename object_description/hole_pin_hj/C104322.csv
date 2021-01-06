@@ -1,0 +1,4 @@
+﻿PartName,SizeToAxisX,SizeToAxisY,SizeToAxisZ,CenterPointX,CenterPointY,CenterPointZ,MinPointX,MinPointY,MinPointZ,MaxPointX,MaxPointY,MaxPointZ
+C104322.STEP,60,11.3,11.3,30,0,0,0,-5.65,-5.65,60,5.65,5.65
+pin_num,CenterFrom_X,CenterFrom_Y,CenterFrom_Z,CenterTo_X,CenterTo_Y,CenterTo_Z,CenterAxisDir_X,CenterAxisDir_Y,CenterAxisDir_Z,Radius,type,
+0,3.888889,0,0,60,0,0,1,0,0,3,screw,

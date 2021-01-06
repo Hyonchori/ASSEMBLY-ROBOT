@@ -1,0 +1,11 @@
+PartName,SizeToAxisX,SizeToAxisY,SizeToAxisZ,CenterPointX,CenterPointY,CenterPointZ,MinPointX,MinPointY,MinPointZ,MaxPointX,MaxPointY,MaxPointZ
+part2.STEP,340,50,20,0,0,10,-170,-25,0,170,25,20
+hole_num,CenterX,CenterY,CenterZ,NormalX,NormalY,NormalZ,Radius,height,through,type,direction,
+0,-170,-16,10,1,0,0,4,23,FALSE,hole,left,
+1,170,-16,10,-1,0,0,4,23,FALSE,hole,right,
+2,-170,0,10,1,0,0,2.5,23,FALSE,hole,left,
+3,170,0,10,-1,0,0,2.5,23,FALSE,hole,right,
+4,-170,16,10,1,0,0,4,23,FALSE,hole,left,
+5,170,16,10,-1,0,0,4,23,FALSE,hole,right,
+6,-112,-14.5,20,0,0,-1,3,13,FALSE,hole,top,
+7,112,-14.5,20,0,0,-1,3,13,FALSE,hole,top,

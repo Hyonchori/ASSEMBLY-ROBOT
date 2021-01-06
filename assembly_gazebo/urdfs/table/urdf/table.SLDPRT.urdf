@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="table.SLDPRT">
+  <link
+    name="table">
+    <inertial>
+      <origin
+        xyz="0.0045671 0.014691 -0.33515"
+        rpy="0 0 0" />
+      <mass
+        value="1718.4" />
+      <inertia
+        ixx="326.36"
+        ixy="0.1153"
+        ixz="-2.5125"
+        iyy="674.86"
+        iyz="8.08210000000001"
+        izz="803.41" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assembly_gazebo/urdfs/table/meshes/table.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+        <texture
+          filename="package://assembly_gazebo/urdfs/table/textures/" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="package://assembly_gazebo/urdfs/table/meshes/table.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <gazebo reference="table">
+		<material>Gazebo/Orange</material>
+	</gazebo>
+
+</robot>

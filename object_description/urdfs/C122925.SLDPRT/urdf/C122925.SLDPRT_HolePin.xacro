@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="C122925.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="C122925.SLDPRT">
+		<inertial>
+			<origin xyz="0.00578 -5.0668E-19 2.6239E-19" rpy="0 0 0"></origin>
+			<mass value="0.00065266"></mass>
+			<inertia ixx="7.8857E-09" ixy="1.1443E-19" ixz="1.1443E-19" iyy="1.4007E-08" iyz="7.198E-14" izz="1.4006E-08"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C122925.SLDPRT/meshes/C122925.SLDPRT.STL"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C122925.SLDPRT/meshes/C122925.SLDPRT.STL"></mesh>
+			</geometry>
+		</collision>
+	</link>
+	<link name="C122925 pin screw 1">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.009666671000000002" radius="0.003"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="C122925 pin screw 1 joint" type="fixed">
+		<origin xyz="0.0097222245 0.0 0.0" rpy="-0.0 1.57079632679 0.0"></origin>
+		<parent link="C122925.SLDPRT"></parent>
+		<child link="C122925 pin screw 1"></child>
+	</joint>
+	<gazebo reference="C122925 pin screw 1">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+</robot>

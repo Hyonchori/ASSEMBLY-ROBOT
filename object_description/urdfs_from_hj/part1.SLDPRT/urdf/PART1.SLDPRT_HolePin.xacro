@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="PART1.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="PART1.SLDPRT">
+		<inertial>
+			<origin xyz="-4.5591E-18 -0.012314 0.005" rpy="0 0 0"></origin>
+			<mass value="1.556"></mass>
+			<inertia ixx="0.021045" ixy="-1.1594E-18" ixz="6.9483E-20" iyy="0.019376" iyz="5.4332E-20" izz="0.040395"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs_from_hj/PART1.SLDPRT/meshes/PART1.SLDPRT.STL"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs_from_hj/PART1.SLDPRT/meshes/PART1.SLDPRT.STL"></mesh>
+			</geometry>
+		</collision>
+	</link>
+</robot>

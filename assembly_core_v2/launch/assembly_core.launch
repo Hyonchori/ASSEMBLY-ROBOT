@@ -1,0 +1,16 @@
+<launch>
+    <arg name="urdf_path" default="$(find object_description)/urdfs"/>
+    <node name="assembly_core" pkg="assembly_core_v2" type="core.py" output="screen" respawn="false">
+        <param name="stefan_part1_1_description" command="$(find xacro)xacro $(arg urdf_path)/part1.SLDPRT/urdf/part1.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part2_1_description" command="$(find xacro)xacro $(arg urdf_path)/part2.SLDPRT/urdf/part2.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part3_1_description" command="$(find xacro)xacro $(arg urdf_path)/part3.SLDPRT/urdf/part3.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part4_1_description" command="$(find xacro)xacro $(arg urdf_path)/part4.SLDPRT/urdf/part4.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part5_1_description" command="$(find xacro)xacro $(arg urdf_path)/part5.SLDPRT/urdf/part5.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part6_1_description" command="$(find xacro)xacro $(arg urdf_path)/part6.SLDPRT/urdf/part6.SLDPRT_HolePin.xacro"/>
+
+        <param name="stefan_c101350_14_description" command="$(find xacro)xacro $(arg urdf_path)/c101350.SLDPRT/urdf/c101350.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_c104322_6_description" command="$(find xacro)xacro $(arg urdf_path)/c104322.SLDPRT/urdf/c104322.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_c122620_4_description" command="$(find xacro)xacro $(arg urdf_path)/c122620.SLDPRT/urdf/c122620.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_c122925_4_description" command="$(find xacro)xacro $(arg urdf_path)/c122925.SLDPRT/urdf/c122925.SLDPRT_HolePin.xacro"/>
+    </node>
+</launch>

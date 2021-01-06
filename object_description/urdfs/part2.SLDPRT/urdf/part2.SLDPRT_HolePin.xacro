@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="part2.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="part2.SLDPRT">
+		<inertial>
+			<origin xyz="9.5872E-19 1.5409E-05 0.0099941" rpy="0 0 0"></origin>
+			<mass value="0.33131"></mass>
+			<inertia ixx="8.0281E-05" ixy="-3.3402E-20" ixz="1.6479E-20" iyy="0.0030691" iyz="2.5556E-08" izz="0.0031268"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/part2.SLDPRT/meshes/part2.SLDPRT.STL"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/part2.SLDPRT/meshes/part2.SLDPRT.STL"></mesh>
+			</geometry>
+		</collision>
+	</link>
+	<link name="part2 hole blocked 1">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 2">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 3">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.0025"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 4">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.0025"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 5">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 6">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.023" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 7">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.013" radius="0.003"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part2 hole blocked 8">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.013" radius="0.003"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="part2 hole blocked 1 joint" type="fixed">
+		<origin xyz="-0.1585 -0.016 0.01" rpy="-0.0 1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 1"></child>
+	</joint>
+	<joint name="part2 hole blocked 2 joint" type="fixed">
+		<origin xyz="0.1585 -0.016 0.01" rpy="0.0 -1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 2"></child>
+	</joint>
+	<joint name="part2 hole blocked 3 joint" type="fixed">
+		<origin xyz="-0.1585 0.0 0.01" rpy="-0.0 1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 3"></child>
+	</joint>
+	<joint name="part2 hole blocked 4 joint" type="fixed">
+		<origin xyz="0.1585 0.0 0.01" rpy="0.0 -1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 4"></child>
+	</joint>
+	<joint name="part2 hole blocked 5 joint" type="fixed">
+		<origin xyz="-0.1585 0.016 0.01" rpy="-0.0 1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 5"></child>
+	</joint>
+	<joint name="part2 hole blocked 6 joint" type="fixed">
+		<origin xyz="0.1585 0.016 0.01" rpy="0.0 -1.57079632679 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 6"></child>
+	</joint>
+	<joint name="part2 hole blocked 7 joint" type="fixed">
+		<origin xyz="-0.112 -0.0145 0.0135" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 7"></child>
+	</joint>
+	<joint name="part2 hole blocked 8 joint" type="fixed">
+		<origin xyz="0.112 -0.0145 0.0135" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part2.SLDPRT"></parent>
+		<child link="part2 hole blocked 8"></child>
+	</joint>
+	<gazebo reference="part2 hole blocked 1">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 2">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 3">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 4">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 5">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 6">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 7">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part2 hole blocked 8">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+</robot>

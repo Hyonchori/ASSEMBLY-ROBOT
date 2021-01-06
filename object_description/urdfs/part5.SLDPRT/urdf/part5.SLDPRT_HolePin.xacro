@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="part5.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="part5.SLDPRT">
+		<inertial>
+			<origin xyz="0.25069 0.35098 0.021275" rpy="0 0 0"></origin>
+			<mass value="1.8124"></mass>
+			<inertia ixx="0.085423" ixy="0.02825" ixz="0.004314" iyy="0.051695" iyz="0.0019941" izz="0.13615"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/part5.SLDPRT/meshes/part5.SLDPRT.STL"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/part5.SLDPRT/meshes/part5.SLDPRT.STL"></mesh>
+			</geometry>
+		</collision>
+	</link>
+	<link name="part5 hole blocked 1">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.01" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole opened 2">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.03" radius="0.00275"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 3">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.01" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 4">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.01" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole opened 5">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.03" radius="0.00275"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 6">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.01" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 7">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.015" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 8">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.015" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole opened 9">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.03" radius="0.00275"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<link name="part5 hole blocked 10">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.015" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="part5 hole blocked 1 joint" type="fixed">
+		<origin xyz="0.00049 0.3947 0.01" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 1"></child>
+	</joint>
+	<joint name="part5 hole opened 2 joint" type="fixed">
+		<origin xyz="0.00133 0.41068 0.0" rpy="0.0 0.0 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole opened 2"></child>
+	</joint>
+	<joint name="part5 hole blocked 3 joint" type="fixed">
+		<origin xyz="0.00217 0.42666 0.01" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 3"></child>
+	</joint>
+	<joint name="part5 hole blocked 4 joint" type="fixed">
+		<origin xyz="0.36737 0.37548 0.045" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 4"></child>
+	</joint>
+	<joint name="part5 hole opened 5 joint" type="fixed">
+		<origin xyz="0.36821 0.39146 0.035" rpy="0.0 0.0 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole opened 5"></child>
+	</joint>
+	<joint name="part5 hole blocked 6 joint" type="fixed">
+		<origin xyz="0.36904 0.40743 0.045" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 6"></child>
+	</joint>
+	<joint name="part5 hole blocked 7 joint" type="fixed">
+		<origin xyz="0.39324 0.56739 0.0425" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 7"></child>
+	</joint>
+	<joint name="part5 hole blocked 8 joint" type="fixed">
+		<origin xyz="0.42712 0.84437 0.0425" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 8"></child>
+	</joint>
+	<joint name="part5 hole opened 9 joint" type="fixed">
+		<origin xyz="0.42935 0.86022 0.035" rpy="0.0 0.0 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole opened 9"></child>
+	</joint>
+	<joint name="part5 hole blocked 10 joint" type="fixed">
+		<origin xyz="0.43158 0.87606 0.0425" rpy="0.0 3.14159265359 0.0"></origin>
+		<parent link="part5.SLDPRT"></parent>
+		<child link="part5 hole blocked 10"></child>
+	</joint>
+	<gazebo reference="part5 hole blocked 1">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole opened 2">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 3">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 4">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole opened 5">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 6">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 7">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 8">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole opened 9">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+	<gazebo reference="part5 hole blocked 10">
+		<material>Gazebo/BlueTransparent</material>
+	</gazebo>
+</robot>

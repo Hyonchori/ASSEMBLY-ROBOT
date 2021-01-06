@@ -1,0 +1,12 @@
+<launch>
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="true"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+	<param name="table_description" command="$(find xacro)xacro $(find assembly_gazebo)/urdfs/table/urdf/table.SLDPRT.urdf"/>
+
+	<node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table_description -urdf 
+            -model table -z 0.79 -Y -1.57" respawn="false" output="screen"/>
+            
+</launch>

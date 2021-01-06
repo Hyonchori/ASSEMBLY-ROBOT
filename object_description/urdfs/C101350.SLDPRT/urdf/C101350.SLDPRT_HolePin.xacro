@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot name="C101350.SLDPRT" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<link name="C101350.SLDPRT">
+		<inertial>
+			<origin xyz="-1.0658E-19 -3.5447E-20 0.015" rpy="0 0 0"></origin>
+			<mass value="0.0014585"></mass>
+			<inertia ixx="1.0843E-07" ixy="-5.5099E-42" ixz="-5.9762E-25" iyy="1.0843E-07" iyz="-3.6651E-40" izz="1.1439E-08"></inertia>
+		</inertial>
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C101350.SLDPRT/meshes/C101350.SLDPRT.STL" scale="0.9 0.9 0.9"></mesh>
+			</geometry>
+			<material name="">
+				<color rgba="0.79216 0.81961 0.93333 1"></color>
+			</material>
+		</visual>
+		<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<mesh filename="package://object_description/urdfs/C101350.SLDPRT/meshes/C101350.SLDPRT.STL" scale="0.9 0.9 0.9"></mesh>
+			</geometry>
+		</collision>
+	</link>
+	<link name="C101350 pin insert 1">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"></origin>
+			<geometry>
+				<cylinder length="0.03" radius="0.004"></cylinder>
+			</geometry>
+		</visual>
+	</link>
+	<joint name="C101350 pin insert 1 joint" type="fixed">
+		<origin xyz="0.0 0.0 0.015" rpy="0.0 0.0 0.0"></origin>
+		<parent link="C101350.SLDPRT"></parent>
+		<child link="C101350 pin insert 1"></child>
+	</joint>
+	<gazebo reference="C101350 pin insert 1">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+</robot>
