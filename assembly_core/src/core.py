@@ -618,6 +618,11 @@ class Core_for_Seq_Generation(Sim_Core):
                             print("")
 
                         else:
+
+                            init_mat = megaParent_obj.real_pose_mat
+                            init_tr = tf.translation_from_matrix(init_mat)
+                            init_quat = tf.quaternion_from_matrix(init_mat)
+
                             real_pre_cm = megaParent_obj.real_cm
 
                             theta = m.radians(rot_degrees)
@@ -665,8 +670,8 @@ class Core_for_Seq_Generation(Sim_Core):
 
                             temp_seq = {}
                             temp_seq["assembly_type"] = "rotate"
-                            temp_seq["pre_tr"] = pre_tr
-                            temp_seq["pre_quat"] = pre_quat
+                            temp_seq["pre_tr"] = init_tr
+                            temp_seq["pre_quat"] = init_quat
                             temp_seq["rotated_tr"] = target_tr
                             temp_seq["rotated_quat"] = target_quat
                             temp_seq["target_obj_name"] = megaParent_obj.reference_part
@@ -1058,6 +1063,7 @@ class Core_Main(Core_for_Seq_Generation):
 #core.spawn_final_obj()
 
 core = Core_for_Seq_Generation(cowork=True)
+
 #core = Core_Main(cowork=True)
 #pprint(core.re_final_dict)
 
