@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot name="ur5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:include filename="$(find env_setting)/urdf/ur5e_robot_noworld.urdf.xacro"/>
+
+    <link name="grasp_point">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+		</visual>
+	</link>
+	<gazebo reference="grasp_point">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+
+	<joint name="grasp_point_joint" type="fixed">
+		<origin xyz="0.1428 0 0" rpy="0 0 0"/>
+		<parent link="ee_link"/>
+		<child link="grasp_point"/>
+	</joint>
+
+</robot>

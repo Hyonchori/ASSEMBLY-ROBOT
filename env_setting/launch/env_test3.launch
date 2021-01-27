@@ -1,0 +1,37 @@
+<launch>
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<!--<arg name="world_name" default="$(find env_setting)/worlds/factory_world.world"/>-->
+		<arg name="paused" default="false"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+
+	<param name="table_description" command="$(find xacro)xacro $(find env_setting)/urdf/table_env.urdf.xacro"/>
+
+	<param name="camera_description" command="$(find xacro)/xacro $(find env_setting)/urdf/depth_camera.urdf.xacro"/>
+
+	<node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table_description -urdf -model table -z 0.001" respawn="false" output="screen"/>
+
+	<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param camera_description -urdf -model camera_1 -z 1.9 -P 1.57" respawn="false" output="screen"/>
+
+
+
+	<rosparam file="$(find env_setting)/config/controllers.yaml" command="load"/>
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="true"
+                        output="screen" args="joint_state_controller
+                                            arm_controller
+                                            gripper_controller"/>
+
+	<param name="robot_description" command="$(find xacro)/xacro $(find env_setting)/urdf/ur5e_base.urdf.xacro"/>
+
+	<node name="spawn_ur_robot" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -urdf -model robot -x -0.645 -z 0.788" respawn="false" output="screen"/>
+
+
+
+
+
+
+
+
+
+</launch>

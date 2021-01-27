@@ -1,0 +1,12 @@
+<launch>
+	<!-- declare gazebo world-->
+	<!-- <include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="true"/>
+		<arg name="gui" default="true"/>
+	</include> -->
+
+	<node name="spawn_stick" pkg="gazebo_ros" type="spawn_model" 
+	args="-urdf -file $(find object_description_for_compt)/urdf_packages/chair part6.step/urdf/chair_part6.SLDPRT.urdf 
+	-model stick -x 0.0 -y -0.0 -z 0.0" respawn="false" output="screen"/>
+	
+</launch>

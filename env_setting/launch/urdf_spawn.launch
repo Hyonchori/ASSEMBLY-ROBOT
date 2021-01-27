@@ -1,0 +1,71 @@
+<launch>
+	
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="true"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+
+	<arg name="target" default="PART6"/>
+	<!--<param name="object_description" 
+	command="$(find xacro)xacro $(find object_description_for_compt)/urdfs/$(arg target).SLDPRT/urdf/$(arg target).SLDPRT_HolePin.xacro"/>-->
+	
+	<param name="object_description" 
+	command="$(find xacro)xacro $(find assembly_robot_description)/urdf/rob1_rob2_multiarm.urdf.xacro"/>
+	<node name="spawn_object" pkg="gazebo_ros" type="spawn_model" 
+	args="-urdf -param object_description -urdf -model object -z 0.0" respawn="false" output="screen"/>
+	<!--<node name="spawn_object" pkg="env_setting" type="simple_urdf_spawner.py"
+		respawn="false" output="screen"/>-->
+	
+			
+
+	
+	<!--<node name="spawn_urdf1" pkg="gazebo_ros" type="spawn_model" args="-urdf 
+	-file $(find object_description_for_compt)/urdfs/part6/urdf/part6_HolePin.SLDPRT.urdf 
+	-model chair " respawn="false" output="screen"/>-->
+
+	<!--<node name="spawn_urdf2" pkg="gazebo_ros" type="spawn_model" args="-urdf 
+	-file $(find object_description)/chair_urdf_for_real/chair_part6.SLDPRT.urdf 
+	-model chair2 " respawn="false" output="screen"/>-->
+	
+
+<!--
+	<param name="chair_part1_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part1_post.urdf.xacro"/>
+
+	<param name="chair_part2_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part2_post.urdf.xacro"/>
+
+	<param name="chair_part3_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part3_post.urdf.xacro"/>
+
+	<param name="chair_part4_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part4_post.urdf.xacro"/>
+
+	<param name="chair_part5_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part5_post.urdf.xacro"/>
+
+	<param name="chair_part6_description" command="$(find xacro)xacro $(find object_description)/chair_xacro/chair_part6_post.urdf.xacro"/>
+
+
+
+	<node name="spawn_object1" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part1_description 
+			  -urdf -model object1 -x 0" respawn="false" output="screen"/>
+
+	<node name="spawn_object2" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part2_description 
+			  -urdf -model object2 -x 0.3" respawn="false" output="screen"/>
+
+	<node name="spawn_object3" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part3_description 
+			  -urdf -model object3 -x 0.6" respawn="false" output="screen"/>		
+
+	<node name="spawn_object4" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part4_description 
+			  -urdf -model object4 -x 0.9" respawn="false" output="screen"/>
+
+	<node name="spawn_object5" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part5_description 
+			  -urdf -model object5 -x 1.2" respawn="false" output="screen"/>
+
+	<node name="spawn_object6" pkg="gazebo_ros" type="spawn_model" 
+		args="-urdf -param chair_part6_description 
+			  -urdf -model object6 -x 1.5" respawn="false" output="screen"/>			  
+-->
+</launch>

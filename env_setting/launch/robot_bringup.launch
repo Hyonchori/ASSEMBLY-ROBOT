@@ -1,0 +1,8 @@
+<launch>
+	<arg name="type" default="position"/>
+	<rosparam file="$(find env_setting)/config/$(arg type)_controllers.yaml" command="load"/>
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="true"
+                        output="screen" args="joint_state_controller
+                                            arm_controller
+                                            gripper_controller"/>
+</launch>

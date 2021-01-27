@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="table_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find env_setting)/urdf/pin_holder.SLDPRT.urdf" />
+  
+  <link name="world" />
+  <joint name="world_table" type="fixed">
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+    <parent link="world"/>
+    <child link="pin_holder.SLDPRT"/>
+  </joint>
+</robot>

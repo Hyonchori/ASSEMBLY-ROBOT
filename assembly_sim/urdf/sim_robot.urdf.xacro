@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="sim_robot" >
+    <xacro:include filename="$(find assembly_gazebo)/urdfs/table/urdf/table.SLDPRT.xacro"/>
+
+    <xacro:include filename="$(find ur_e_description)/urdf/common.gazebo.xacro" />
+    <xacro:include filename="$(find ur_e_description)/urdf/ur5e.urdf.xacro" />
+    <xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro"/>
+
+    <xacro:ur5e_robot prefix="robot1_" joint_limited="true"
+        shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+        shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+        elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+        wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+        wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+        wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+    />
+
+    <xacro:robotiq_85_gripper prefix="robot1_" parent="robot1_ee_link" >
+	  <origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:robotiq_85_gripper>
+
+    <link name="robot1_grasp_point">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+		</visual>
+	</link>
+
+    <gazebo reference="robot1_grasp_point">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+
+    <joint name="grasp_point_joint1" type="fixed">
+		<origin xyz="0.1428 0 0" rpy="0 0 0"/>
+		<parent link="robot1_gripper_base_link"/>
+		<child link="robot1_grasp_point"/>
+	</joint>
+
+
+    <xacro:ur5e_robot prefix="robot2_" joint_limited="true"
+        shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+        shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+        elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+        wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+        wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+        wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+    />
+
+    <xacro:robotiq_85_gripper prefix="robot2_" parent="robot2_ee_link" >
+	  <origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:robotiq_85_gripper>
+
+    <link name="robot2_grasp_point">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+		</visual>
+	</link>
+
+    <gazebo reference="robot2_grasp_point">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+
+    <joint name="grasp_point_joint2" type="fixed">
+		<origin xyz="0.1428 0 0" rpy="0 0 0"/>
+		<parent link="robot2_gripper_base_link"/>
+		<child link="robot2_grasp_point"/>
+	</joint>
+
+
+    <link name="world" />
+
+    <joint name="world_joint" type="fixed">
+        <parent link="world" />
+        <child link = "table" />
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <joint name="robot1_joint" type="fixed">
+        <parent link="table" />
+        <child link = "robot1_base_link" />
+        <origin xyz="-0.75 0.0 0.01" rpy="0.0 0.0 3.141592" />
+    </joint>
+
+    <joint name="robot2_joint" type="fixed">
+        <parent link="table" />
+        <child link = "robot2_base_link" />
+        <origin xyz="1.0 0.0 0.01" rpy="0.0 0.0 0.0" />
+    </joint>
+
+</robot>

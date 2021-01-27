@@ -462,8 +462,8 @@ class Core_for_Seq_Generation(Sim_Core):
                                 child_obj, child_holepin_names
                             )
                             print("")
-                            rospy.logwarn(parent_obj.reference_part)
-                            rospy.logwarn(child_obj.reference_part)
+                            rospy.logwarn("Parent: {}".format(parent_obj.reference_part))
+                            rospy.logwarn("Child: {}".format(child_obj.reference_part))
 
                 else:
                     rospy.logwarn("Rotation task is required!")
@@ -612,10 +612,6 @@ class Core_for_Seq_Generation(Sim_Core):
                                 megaParent_obj, parent_holepin_names,
                                 obj, child_holepin_names
                             )
-                            print("")
-                            rospy.logwarn(megaParent_obj.reference_part)
-                            rospy.logwarn(obj.reference_part)
-                            print("")
 
                         else:
 
@@ -640,9 +636,9 @@ class Core_for_Seq_Generation(Sim_Core):
                             target_tr_mat = tf.translation_matrix(target_tr_vec)
 
                             target_real_mat = tf.concatenate_matrices(target_tr_mat, rotated_mat)
-                            pprint(target_real_mat)
+                            #pprint(target_real_mat)
                             target_real_mat[2, 3] = 0
-                            pprint(target_real_mat)
+                            #pprint(target_real_mat)
 
                             pre_tr = tf.translation_from_matrix(rotated_mat)
                             pre_quat = tf.quaternion_from_matrix(rotated_mat)
@@ -655,7 +651,7 @@ class Core_for_Seq_Generation(Sim_Core):
 
                             real_rot_cm2 = megaParent_obj.real_cm
 
-                            print("!!!!!!!!!!!!!!!!!!!!!!")
+                            '''print("!!!!!!!!!!!!!!!!!!!!!!")
                             rospy.logwarn(rot_axis)
                             rospy.logwarn(rot_degrees)
 
@@ -666,7 +662,7 @@ class Core_for_Seq_Generation(Sim_Core):
                             rospy.logerr(pre_tr)
                             rospy.logerr(target_tr)
                             print("")
-                            rospy.logerr(real_rot_cm2)
+                            rospy.logerr(real_rot_cm2)'''
 
                             temp_seq = {}
                             temp_seq["assembly_type"] = "rotate"
@@ -697,10 +693,10 @@ class Core_for_Seq_Generation(Sim_Core):
 
         degrees = self.AT.get_angles_between_two_vector(hole_z, ref_z)
         cross_vector = self.AT.get_cross_vector(hole_z, ref_z)
-        print("\n---")
+        '''print("\n---")
         print(hole_z)
         print(degrees)
-        print(cross_vector)
+        print(cross_vector)'''
 
         if degrees <= 5:
             is_right = True

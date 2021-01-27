@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot name="ur5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:include filename="$(find env_setting)/urdf/ur5e_robot_noworld.urdf.xacro"/>
+	<xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro"/>
+
+	<xacro:robotiq_85_gripper prefix="" parent="ee_link" >
+	  <origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:robotiq_85_gripper>
+
+	
+
+	<link name="grasp_point">
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/>
+			<geometry>
+				<box size="0.01 0.01 0.01"/>
+			</geometry>
+		</visual>
+	</link>
+	<gazebo reference="grasp_point">
+		<material>Gazebo/RedTransparent</material>
+	</gazebo>
+
+	<joint name="grasp_point_joint" type="fixed">
+		<origin xyz="0.1428 0 0" rpy="0 0 0"/>
+		<parent link="gripper_base_link"/>
+		<child link="grasp_point"/>
+	</joint>
+
+	<gazebo reference="gripper_finger1_finger_tip_link">
+		<plugin name="my_plugin" filename="libcontact.so"/>
+	</gazebo>
+	
+
+	<!--
+	<gazebo>
+		<plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+		<arm>
+			<arm_name>manipulator</arm_name>
+			<palm_link>wrist_3_link</palm_link>
+			<gripper_link>gripper_finger1_finger_tip_link</gripper_link>
+			<gripper_link>gripper_finger2_finger_tip_link</gripper_link>
+		</arm>
+		<forces_angle_tolerance>100</forces_angle_tolerance>
+		<update_rate>30</update_rate>
+		<grip_count_threshold>4</grip_count_threshold>
+		<max_grip_count>8</max_grip_count>
+		<release_tolerance>0.005</release_tolerance>
+		<disable_collisions_on_attach>false</disable_collisions_on_attach>
+		<contact_topic>__default_topic__</contact_topic>
+		</plugin>
+	</gazebo>
+	-->
+
+
+	
+</robot>

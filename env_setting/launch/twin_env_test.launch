@@ -1,0 +1,50 @@
+<launch>
+	<arg name="limited" default="false"/>
+	<arg name="paused" default="false"/>
+	<arg name="gui" default="true"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" default="worlds/empty.world"/>
+		<arg name="paused" value="$(arg paused)"/>
+		<arg name="gui" value="$(arg gui)"/>
+	</include>
+
+	<param name="table_env_description" command="$(find xacro)/xacro $(find arrange_pin_robot)/urdf/table_robot.urdf.xacro"/>
+
+	<param name="camera_description" command="$(find xacro)/xacro $(find arrange_pin_robot)/urdf/RGBD_camera.urdf.xacro"/>
+
+
+	<node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table_env_description -urdf -model table -z 0.001" respawn="false" output="screen"/>
+
+	<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param camera_description -urdf -model camera -z 1.8 -P 1.57" respawn="false" output="screen"/>
+
+
+	<group ns="robot_1">
+		<param name="tf_prefix" value="robot_1"/>
+		<include file="$(find arrange_pin_robot)/launch/ur5_gripper.launch">
+			<arg name="init_pose" value="-x -0.645 -z 0.788"/>
+			<arg name="robot_name" value="robot_1"/>
+		</include>
+	</group>
+
+	<group ns="robot_2">
+		<param name="tf_prefix" value="robot_2"/>
+		<include file="$(find arrange_pin_robot)/launch/ur5_gripper.launch">
+			<arg name="init_pose" value="-x 0.645 -z 0.788"/>
+			<arg name="robot_name" value="robot_2"/>
+		</include>
+	</group>
+
+
+	<include file="$(find arrange_pin_robot)/launch/ur5_upload.launch">
+		<arg name="limited" value="$(arg limited)"/>
+	</include>
+
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+		<param name="publish_frequency" type="double" value="50.0"/>
+	</node>
+
+
+
+</launch>

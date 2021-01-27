@@ -1,0 +1,22 @@
+<launch>
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="false"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+
+	<param name="table_description" command="$(find xacro)xacro $(find env_setting)/urdf/table_env.urdf.xacro"/>
+	<param name="part1_holder_description" command="$(find xacro)xacro $(find env_setting)/urdf/Part1_holder.urdf.xacro"/>
+	<param name="pin_holder_description" command="$(find xacro)xacro $(find env_setting)/urdf/pin_holder.urdf.xacro"/>
+
+	<param name="camera_description" command="$(find xacro)/xacro $(find env_setting)/urdf/depth_camera.urdf.xacro"/>
+
+	<node name="spawn_table" pkg="gazebo_ros" type="spawn_model" args="-urdf -param table_description -urdf -model table -z 0.001" respawn="false" output="screen"/>
+	<!--<node name="spawn_part1_holder" pkg="gazebo_ros" type="spawn_model" args="-urdf -param part1_holder_description 
+	-urdf -model part1_holder -x -0.3 -y 0.4 -z 0.788" respawn="false" output="screen"/>-->
+	<node name="spawn_pin_holder" pkg="gazebo_ros" type="spawn_model" args="-urdf -param pin_holder_description -urdf 
+	-model pin_holder -x 0.6 -y -0.4 -z 0.788" respawn="false" output="screen"/>
+
+	<node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-urdf -param camera_description -urdf -model camera_global -z 1.9 -P 1.57079632679 " respawn="false" output="screen"/>
+	
+</launch>

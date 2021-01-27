@@ -1,0 +1,74 @@
+# Simulation settings for using moveit_sim_controllers
+moveit_sim_hw_interface:
+  joint_model_group: arm1
+  joint_model_group_pose: arm1_zeros
+# Settings for ros_control_boilerplate control loop
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+    - robot1_shoulder_pan_joint
+    - robot1_shoulder_lift_joint
+    - robot1_elbow_joint
+    - robot1_wrist_1_joint
+    - robot1_wrist_2_joint
+    - robot1_wrist_3_joint
+    - robot1_gripper_finger1_joint
+    - robot2_shoulder_pan_joint
+    - robot2_shoulder_lift_joint
+    - robot2_elbow_joint
+    - robot2_wrist_1_joint
+    - robot2_wrist_2_joint
+    - robot2_wrist_3_joint
+    - robot2_gripper_finger1_joint
+  sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+controller_list:
+  - name: arm1_controller
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - robot1_shoulder_pan_joint
+      - robot1_shoulder_lift_joint
+      - robot1_elbow_joint
+      - robot1_wrist_1_joint
+      - robot1_wrist_2_joint
+      - robot1_wrist_3_joint
+  - name: arm2_controller
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - robot2_shoulder_pan_joint
+      - robot2_shoulder_lift_joint
+      - robot2_elbow_joint
+      - robot2_wrist_1_joint
+      - robot2_wrist_2_joint
+      - robot2_wrist_3_joint
+hand2_controller:
+  type: position_controllers/JointPositionController
+  joints:
+    robot2_gripper_finger1_joint
+  gains:
+    robot2_gripper_finger1_joint:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+hand1_controller:
+  type: position_controllers/JointPositionController
+  joints:
+    robot1_gripper_finger1_joint
+  gains:
+    robot1_gripper_finger1_joint:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1

@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: env_setting
+    relative_path: urdf/ur5e_base.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur5.srdf
+  CONFIG:
+    author_name: cai
+    author_email: cai@cai.com
+    generated_timestamp: 1582783299

@@ -1,0 +1,11 @@
+<launch>
+    <arg name="x" default="-0.2"/>
+    <arg name="y" default="-0.2"/>
+    <arg name="z" default="0.8"/>
+    <arg name="box_name" default="box1"/>
+
+    <param name="box_description" command="$(find xacro)/xacro $(find env_setting)/urdf/simple_box.urdf.xacro"/>
+    <node name="box_spawner1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+            args="-urdf -model $(arg box_name) -param box_description -x $(arg x) -y $(arg y) -z $(arg z)"/>
+
+</launch>

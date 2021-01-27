@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Part1_holder.SLDPRT">
+  <link
+    name="Part1_holder.SLDPRT">
+    <inertial>
+      <origin
+        xyz="2.485E-17 7.08302028712135E-18 0.015037"
+        rpy="0 0 0" />
+      <mass
+        value="0.31786" />
+      <inertia
+        ixx="0.00010615"
+        ixy="4.7361E-19"
+        ixz="1.1073E-19"
+        iyy="0.0020593"
+        iyz="1.19591465118309E-20"
+        izz="0.0021112" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://env_setting/meshes/Part1_holder.SLDPRT.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://env_setting/meshes/Part1_holder.SLDPRT.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="Part1_holder.SLDPRT">
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>100000</mu1>
+    <mu2>100000</mu2>
+    <maxVel>0</maxVel>
+    <minDepth>0.0001</minDepth>
+  </gazebo>  
+</robot>

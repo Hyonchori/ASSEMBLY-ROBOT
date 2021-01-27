@@ -1,0 +1,32 @@
+<launch>
+	<arg name="robot_name" default="robot_sim"/>
+	<arg name="z_offset" default="0.79"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="false"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+	<param name="robot_description"
+		command="$(find xacro)/xacro $(find assembly_sim)/urdf/sim_robot.urdf.xacro"/>
+	
+	<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+		<param name="tf_prefix" value="$(arg robot_name)"/>
+	</node>
+
+	<node name="world_to_simul_robot_world" type="static_transform_publisher" pkg="tf2_ros" 
+		args="0 0 $(arg z_offset) 0 0 0 origin $(arg robot_name)/world"/>
+
+	<node name="spawn_ur_robot" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+		args="-urdf -param robot_description -urdf -model $(arg robot_name) -z $(arg z_offset)"/>
+
+	<rosparam file="$(find assembly_sim)/config/robot_controllers.yaml" command="load"/>
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="true"
+                        output="screen" args="joint_state_controller
+                                            arm1_controller
+                                            hand1_controller
+											arm2_controller
+											hand2_controller"/>
+	
+	<include file="$(find assembly_sim_config)/launch/move_group.launch"/>
+</launch>

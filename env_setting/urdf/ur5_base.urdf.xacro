@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot name="ur5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:include filename="$(find env_setting)/urdf/ur5_gripper.urdf.xacro"/>
+	<xacro:include filename="$(find env_setting)/urdf/robot_base.urdf.xacro"/>
+
+	<link name="world"/>
+	<joint name="world_base_joint" type="fixed">
+	  <origin xyz="0.0 0.0 0.001" rpy="0 0 0" />
+	  <parent link="world"/>
+	  <child link="robot_base"/>
+	</joint>
+	  
+	<joint name="robot_base_joint" type="fixed">
+	  <origin xyz="0.0 0.0 0.001" rpy="0 0 0"/>
+	  <parent link="robot_base"/>
+	  <child link="base_link"/>
+	</joint>
+	  
+</robot>

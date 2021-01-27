@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+    <xacro:include filename="$(find env_setting)/urdf/inertial_macro.xacro" />
+
+    <xacro:property name="box_w" value="0.05"/>
+    <xacro:property name="box_d" value="0.05"/>
+    <xacro:property name="box_h" value="0.06"/>
+    <xacro:property name="box_mass" value="0.1"/>
+
+    <link name="simple_box">
+        <visual>
+            <origin xyz="0 0 ${box_h/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${box_w} ${box_d} ${box_h}"/>
+            </geometry>
+            <material name="yellow">
+                <color rgba="0.8 0.8 0.0 0.0"/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${box_h/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${box_w} ${box_d} ${box_h}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${box_mass}"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <xacro:box_inertia m="${box_mass}" x="${box_w}" y="${box_d}" z="${box_h}"/>
+        </inertial>
+    </link>
+
+    <gazebo reference="simple_box">
+        <material>Gazebo/Blue</material>
+        <mu1>10.0</mu1>
+        <mu2>1000000.0</mu2>
+        <maxVel>0.0</maxVel>
+        <minDepth>0.0</minDepth>
+    </gazebo>
+</robot>

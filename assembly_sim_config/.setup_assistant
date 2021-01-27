@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: assembly_sim
+    relative_path: urdf/sim_robot.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/sim_robot.srdf
+  CONFIG:
+    author_name: gus8cjf@hanyang.ac.kr
+    author_email: gus8cjf@hanyang.ac.kr
+    generated_timestamp: 1611662851

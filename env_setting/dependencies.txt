@@ -1,0 +1,13 @@
+
+1. universal robot package
+	: http://wiki.ros.org/action/show/universal_robots?action=show&redirect=universal_robot
+
+2. robotiq 2F-85 package
+	:https://github.com/StanleyInnovation/robotiq_85_gripper
+
+3. usb_cam package
+	: http://wiki.ros.org/usb_cam
+
+4. aruco_detect package
+	: https://github.com/UbiquityRobotics/fiducials
+

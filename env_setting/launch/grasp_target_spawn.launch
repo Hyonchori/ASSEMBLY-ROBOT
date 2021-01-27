@@ -1,0 +1,6 @@
+<launch>
+
+    <param name="object_description" command="$(find xacro)xacro $(find object_description)/xacro/part5.urdf.xacro"/>
+	<node name="spawn_object" pkg="gazebo_ros" type="spawn_model" args="-urdf -param object_description -urdf -model object -z 0.78" respawn="false" output="screen"/>
+
+</launch>

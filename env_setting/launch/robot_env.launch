@@ -1,0 +1,30 @@
+<launch>
+	<include file="$(find env_setting)/launch/init_env.launch"/>
+	<arg name="controller_type" default="position"/>
+
+	<group ns="simul_robot1">
+		<include file="$(find env_setting)/launch/robot_spawn.launch">
+			<arg name="robot_name" value="simul_robot1"/>
+			<arg name="x" value="-0.645"/>
+			<arg name="yaw" value="$(eval 3.141592654)"/>
+		</include>
+
+		<include file="$(find env_setting)/launch/robot_bringup.launch">
+			<arg name="type" value="$(arg controller_type)"/>
+		</include>
+		<include file="$(find env_setting_config)/launch/move_group.launch"/>
+	</group>
+
+	<group ns="simul_robot2">
+		<include file="$(find env_setting)/launch/robot_spawn.launch">
+			<arg name="robot_name" value="simul_robot2"/>
+			<arg name="x" value="0.645"/>
+			<arg name="yaw" value="0.0"/>
+		</include>
+
+		<include file="$(find env_setting)/launch/robot_bringup.launch">
+			<arg name="type" value="$(arg controller_type)"/>
+		</include>
+		<include file="$(find env_setting_config)/launch/move_group.launch"/>
+	</group>
+</launch>

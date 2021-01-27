@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<robot name="ur5" xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:include filename="$(find ur_description)/urdf/ur5_joint_limited_robot_noworld.urdf.xacro"/>
+	<xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro"/>
+
+	<xacro:robotiq_85_gripper prefix="" parent="ee_link" >
+	  <origin xyz="0 0 0" rpy="0 0 0"/>
+	</xacro:robotiq_85_gripper>
+</robot>

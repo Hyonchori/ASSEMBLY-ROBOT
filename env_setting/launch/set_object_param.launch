@@ -1,0 +1,4 @@
+<launch>
+
+	<param name="robot_description" textfile="$(find env_setting)/urdf/chair_part1.SLDPRT.urdf" />
+</launch>

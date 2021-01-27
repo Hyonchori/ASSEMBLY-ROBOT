@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.5.1-0-g916b5db  Build Version: 1.5.7152.31018
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="pin_holder.SLDPRT">
+  <link
+    name="pin_holder.SLDPRT">
+    <inertial>
+      <origin
+        xyz="0.00027071 -0.000426169999999999 0.0096375"
+        rpy="0 0 0" />
+      <mass
+        value="0.47527" />
+      <inertia
+        ixx="0.00077064"
+        ixy="7.0966E-07"
+        ixz="3.8049E-06"
+        iyy="0.0012629"
+        iyz="1.10569999999995E-06"
+        izz="0.0020021" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://env_setting/meshes/pin_holder.SLDPRT.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+        <texture
+          filename="package://env_setting/textures/" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://env_setting/meshes/pin_holder.SLDPRT.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <gazebo reference="pin_holder.SLDPRT">
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <mu1>100000</mu1>
+    <mu2>100000</mu2>
+    <maxVel>0</maxVel>
+    <minDepth>0.0001</minDepth>
+  </gazebo>
+</robot>

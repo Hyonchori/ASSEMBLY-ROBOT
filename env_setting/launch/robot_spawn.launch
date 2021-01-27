@@ -1,0 +1,21 @@
+<launch>
+	<arg name="x" default="0.0"/>
+    <arg name="y" default="0.0"/>
+    <arg name="z" default="0.786"/>
+    <arg name="yaw" default="0.0"/>
+    <arg name="robot_name" default="robot"/>
+
+	<param name="robot_description" command="$(find xacro)/xacro $(find env_setting)/urdf/ur5e_base.urdf.xacro"/>
+
+	
+	<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+		<param name="tf_prefix" value="$(arg robot_name)"/>
+	</node>
+
+	<node name="world_to_simul_robot_world" type="static_transform_publisher" pkg="tf2_ros" args="$(arg x) $(arg y) $(arg z) $(arg yaw) 0 0 origin $(arg robot_name)/world"/>
+
+
+
+	<node name="spawn_ur_robot" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+		args="-urdf -param robot_description -urdf -model $(arg robot_name) -x $(arg x) -y $(arg y) -z $(arg z) -Y $(arg yaw)"/>
+</launch>
