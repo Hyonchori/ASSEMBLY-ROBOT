@@ -58,7 +58,7 @@ class InterfaceForDetector():
             target_pose = self.get_pose_from_read_file(target_path)
             return target_pose, True
         except IOError:
-            return Noen, False
+            return None, False
 
     def get_pose_from_read_file(self, file_path):
         with open(file_path) as f:

@@ -9,8 +9,7 @@ from pprint import pprint
 
 rospy.init_node("core")
 
-CONNECTION_PATH = "/home/cai/share_for_compt/for_kitech/holepin_connection/holepair.txt"
-#CONNECTION_PATH = "/home/cai/share_for_compt/for_kitech/holepin_connection/holepair_except_part1.txt"
+CONNECTION_PATH = "/home/cai/share_for_compt/for_kitech/holepin_connection/holepair_except_part1.txt"
 TARGET_OBJECT = "stefan"
 
 __metaclass__ = type
@@ -333,7 +332,7 @@ class Sim_Core(Initial_Core):
         else:
             rospy.logwarn("'{}' already exists in gazebo, so delete and respawn this".format(obj_name))
             self.client_delete(obj_name)
-        self.client_pause()
+        #self.client_pause()
         obj_xml = obj.assem_xml
         obj_ns = ""
         self.client_spawn(obj_name, obj_xml, obj_ns, obj_pose, reference)
@@ -348,6 +347,26 @@ class Sim_Core(Initial_Core):
         for final_obj_name, final_obj in self.final_dict.items():
             obj_pose = self.get_pose_by_tr_quat([0,0,1], [0,0,0,1])
             self.spawn_obj(final_obj, obj_pose)
+    
+    def spawn_subObject(self, parent_obj, child_obj, sub_obj):
+        parent_pose = self.client_getModel(parent_obj.reference_part, "table").pose
+        self.delete_obj_in_sim(child_obj.reference_part)
+        self.delete_obj_in_sim(parent_obj.reference_part)
+        self.spawn_obj(sub_obj, parent_pose, "table")
+    
+    def delete_obj_in_sim(self, obj_name):
+        already = self.is_in_gazebo(obj_name)
+        if not already:
+            pass
+        else:
+            self.client_delete(obj_name)
+    
+    def spawn_updated_obj(self, obj, reference="table"):
+        obj_tf = obj.real_pose_mat
+        obj_xyz = tf.translation_from_matrix(obj_tf)
+        obj_quat = tf.quaternion_from_matrix(obj_tf)
+        obj_pose = self.get_pose_by_tr_quat(obj_xyz, obj_quat)
+        self.spawn_obj(obj, obj_pose, reference)
 
 
 
@@ -423,10 +442,7 @@ class Core_for_Seq_Generation(Sim_Core):
                             target_holepin["contact_with"] = used_holepin_in_fin["contact_with"]
                             used_obj_holepin_dict[used_obj_name][holepin_name] = target_holepin
 
-                temp_path = self.upScrew_setting(used_obj_dict, used_obj_holepin_dict, temp_path)
                 temp_path = self.megaParent_setting(used_obj_dict, temp_path)
-                temp_path = self.attach_setting(used_obj_holepin_dict, used_obj_dict, temp_path)
-                temp_path = self.attachScrew_setting(used_obj_holepin_dict, used_obj_dict, temp_path)
                 
                 candidates = self.get_candidates(used_obj_holepin_dict, used_obj_dict)
                 print("\nprocess assembly...\n")
@@ -468,6 +484,8 @@ class Core_for_Seq_Generation(Sim_Core):
 
                 else:
                     rospy.logwarn("Rotation task is required!")
+                    temp_path = self.rotation_setting(used_obj_holepin_dict, used_obj_dict, temp_path)
+                    
                     
 
             for seq in temp_path:
@@ -482,48 +500,83 @@ class Core_for_Seq_Generation(Sim_Core):
             re_final_dict[re_final_obj_name] = used_obj_dict[re_final_obj_name]
         return path, re_final_dict
 
-    def upScrew_setting(self, used_obj_dict, used_obj_holepin_dict, path):
-        for obj_name, obj in used_obj_dict.items():
-            if obj_name not in used_obj_holepin_dict.keys():
-                continue
-            if obj_name in self.upScrew_list and not obj.is_setted:
-                temp_seq = {}
-                temp_seq["assembly_type"] = "move"
-                temp_seq["target_obj_name"] = obj_name
-                path.append(temp_seq)
-                obj.is_setted = True
-            
-            elif obj_name in self.upScrew_list and obj.is_setted:
-                screw_name = obj.assem_HolePins.keys()[0]
-                mate_hole_name = used_obj_holepin_dict[obj_name][screw_name]["contact_with"]
-                mate_obj = self.get_obj_by_holepin(used_obj_dict, mate_hole_name)
-                if mate_obj is not None:
-                    if self.megaChild in mate_obj.components.keys():
-                        can_upScrew = True
-                        for remain_obj_name in used_obj_dict.keys():
-                            if remain_obj_name == obj_name:
-                                continue
-                            elif remain_obj_name.startswith(obj.obj_type) and remain_obj_name not in self.upScrew_list:
-                                can_upScrew = False
-                        if can_upScrew:
-                            temp_seq = {}
-                            temp_seq["assembly_type"] = "upScrew"
-                            temp_seq["parent_obj_name"] = mate_obj.obj_name
-                            temp_seq["parent_holepin_names"] = [mate_hole_name]
-                            temp_seq["child_obj_name"] = obj_name
-                            temp_seq["child_holepin_names"] = [screw_name]
-                            path.append(temp_seq)
+    def rotation_setting(self, used_obj_holepin_dict, used_obj_dict, path):
+        print(used_obj_dict.keys())
+        print(used_obj_holepin_dict.keys())
 
-                            self.assembly_task(
-                                used_obj_dict,
-                                mate_obj, [mate_hole_name],
-                                obj, [screw_name]
-                            )
-                            print("")
-                            rospy.logwarn(mate_obj.reference_part)
-                            rospy.logwarn(obj.reference_part)
-                            print("")
+        for obj_name, obj in used_obj_dict.items():
+            if "C" in obj.obj_type:
+                continue
+            
+            used_holepin_dict = used_obj_holepin_dict[obj_name]
+            target_holepin_info = None
+            for holepin_name, holepin_info in used_holepin_dict.items():
+                if holepin_info["contact_with"] is not None:
+                    temp_holepin_info = obj.assem_HolePins[holepin_name]
+                    if temp_holepin_info["contact_with"] is None:
+                        target_holepin_info = temp_holepin_info
+            
+            if target_holepin_info:
+                holepin_type = target_holepin_info["type"]
+                if holepin_type=="hole":
+                    target_axis = [0, 0, -1]
+                else:
+                    target_axis = [0, 0, 1]
+                
+                hole_z = target_holepin_info["real_zAxis"]
+                rot_degrees = self.AT.get_angles_between_two_vector(hole_z, target_axis)
+                cross_vector = self.AT.get_cross_vector(hole_z, target_axis)
+                rot_axis = tf.unit_vector(cross_vector)
+
+                obj_cm = obj.assem_cm
+                obj_cm_mat = tf.translation_matrix(obj_cm)
+
+                init_mat = obj.real_pose_mat
+                init_tr = tf.translation_from_matrix(init_mat)
+                init_quat = tf.quaternion_from_matrix(init_mat)
+
+                pre_cm_mat = tf.concatenate_matrices(init_mat, obj_cm_mat)
+                pre_cm = tf.translation_from_matrix(pre_cm_mat)
+                real_pre_cm = tf.translation_from_matrix(pre_cm_mat)
+
+                theta = m.radians(rot_degrees)
+                rot_quat = tf.quaternion_about_axis(theta, rot_axis)
+                rot_mat = tf.quaternion_matrix(rot_quat)
+                real_mat = obj.real_pose_mat
+                rotated_mat = tf.concatenate_matrices(rot_mat, real_mat)
+                obj.real_pose_mat = rotated_mat
+                obj.update_real_holepin_pose()
+
+                real_rot_cm = obj.real_cm
+
+                target_tr_vec = np.array(real_pre_cm) - np.array(real_rot_cm)
+                target_tr_mat = tf.translation_matrix(target_tr_vec)
+
+                target_real_mat = tf.concatenate_matrices(rotated_mat, target_tr_mat)
+
+                pre_tr = tf.translation_from_matrix(rotated_mat)
+                pre_quat = tf.quaternion_from_matrix(rotated_mat)
+
+                target_tr = tf.translation_from_matrix(target_real_mat)
+                target_quat = tf.quaternion_from_matrix(target_real_mat)
+                
+                obj.real_pose_mat = target_real_mat
+                obj.update_real_holepin_pose()
+
+                real_rot_cm2 = obj.real_cm
+
+                temp_seq = {}
+                temp_seq["assembly_type"] = "rotate"
+                temp_seq["pre_tr"] = init_tr
+                temp_seq["pre_quat"] = init_quat
+                temp_seq["rotated_tr"] = target_tr
+                temp_seq["rotated_quat"] = target_quat
+                temp_seq["target_obj_name"] = obj.reference_part
+                path.append(temp_seq)
+
         return path
+
+
     
     def get_obj_by_holepin(self, obj_dict, target_holepin_name):
         target_obj = None
@@ -559,196 +612,6 @@ class Core_for_Seq_Generation(Sim_Core):
                 obj.real_pose_mat = rotated_real_pose
                 obj.update_real_holepin_pose()
         return path
-
-    def attach_setting(self, used_obj_holepin_dict, used_obj_dict, path):
-        for obj_name, obj in used_obj_dict.items():
-            if obj_name not in used_obj_holepin_dict.keys():
-                continue
-
-            if obj.is_attachPart:
-                holepin_in_attach_part = used_obj_holepin_dict[obj_name]
-                mate_of_attach_part = []
-                for holepin_name, holepin_info in holepin_in_attach_part.items():
-                    mate_holepin_name = holepin_info["contact_with"]
-                    for temp_obj_name, used_holepin_dict in used_obj_holepin_dict.items():
-                        if mate_holepin_name in used_holepin_dict.keys():
-                            mate_of_attach_part.append(temp_obj_name)
-                mate_of_attach_part_set = list(set(mate_of_attach_part))
-
-                if len(mate_of_attach_part_set) == 1:
-                    can_attach = True
-
-                    megaParent_obj = used_obj_dict[self.megaParent]
-                    if self.megaChild not in megaParent_obj.components.keys():
-                        can_attach = False
-
-                    for upScrew_name in self.upScrew_list:
-                        if upScrew_name in used_obj_dict.keys():
-                            can_attach = False
-                            break
-                    
-                    if can_attach:
-                        child_holepin_names = holepin_in_attach_part.keys()
-                        parent_holepin_names = []
-                        for holepin_name in child_holepin_names:
-                            temp_holepin = holepin_in_attach_part[holepin_name]
-                            parent_holepin_names.append(temp_holepin["contact_with"])
-
-                        parent_holepins = {holepin_name: megaParent_obj.assem_HolePins[holepin_name] \
-                            for holepin_name in parent_holepin_names}
-                        is_aligned_zAxis, rot_axis, rot_degrees = \
-                            self.is_right_zAxis_for_attach(parent_holepins)
-                        
-                        if is_aligned_zAxis:
-                            temp_seq = {}
-                            temp_seq["assembly_type"] = "attach"
-                            temp_seq["parent_obj_name"] = megaParent_obj.reference_part
-                            temp_seq["parent_holepin_names"] = parent_holepin_names
-                            temp_seq["child_obj_name"] = obj_name
-                            temp_seq["child_holepin_names"] = child_holepin_names
-                            path.append(temp_seq)
-
-                            self.attach_task(
-                                used_obj_dict,
-                                megaParent_obj, parent_holepin_names,
-                                obj, child_holepin_names
-                            )
-
-                        else:
-
-                            init_mat = megaParent_obj.real_pose_mat
-                            init_tr = tf.translation_from_matrix(init_mat)
-                            init_quat = tf.quaternion_from_matrix(init_mat)
-
-                            real_pre_cm = megaParent_obj.real_cm
-
-                            theta = m.radians(rot_degrees)
-                            rot_quat = tf.quaternion_about_axis(theta, rot_axis)
-                            rot_mat = tf.quaternion_matrix(rot_quat)
-                            real_mat = megaParent_obj.real_pose_mat
-                            rotated_mat = tf.concatenate_matrices(rot_mat, real_mat)
-                            megaParent_obj.real_pose_mat = rotated_mat
-                            megaParent_obj.update_real_holepin_pose()
-
-                            real_rot_cm = megaParent_obj.real_cm
-
-                            target_tr_vec = np.array(real_pre_cm) - np.array(real_rot_cm)
-                            target_tr_vec[2] = 0
-                            target_tr_mat = tf.translation_matrix(target_tr_vec)
-
-                            target_real_mat = tf.concatenate_matrices(target_tr_mat, rotated_mat)
-                            #pprint(target_real_mat)
-                            target_real_mat[2, 3] = 0
-                            #pprint(target_real_mat)
-
-                            pre_tr = tf.translation_from_matrix(rotated_mat)
-                            pre_quat = tf.quaternion_from_matrix(rotated_mat)
-
-                            target_tr = tf.translation_from_matrix(target_real_mat)
-                            target_quat = tf.quaternion_from_matrix(target_real_mat)
-                            
-                            megaParent_obj.real_pose_mat = target_real_mat
-                            megaParent_obj.update_real_holepin_pose()
-
-                            real_rot_cm2 = megaParent_obj.real_cm
-
-                            '''print("!!!!!!!!!!!!!!!!!!!!!!")
-                            rospy.logwarn(rot_axis)
-                            rospy.logwarn(rot_degrees)
-
-                            rospy.logerr(real_pre_cm)
-                            rospy.logerr(real_rot_cm)
-                            print("")
-                            rospy.logerr(target_tr_vec)
-                            rospy.logerr(pre_tr)
-                            rospy.logerr(target_tr)
-                            print("")
-                            rospy.logerr(real_rot_cm2)'''
-
-                            temp_seq = {}
-                            temp_seq["assembly_type"] = "rotate"
-                            temp_seq["pre_tr"] = init_tr
-                            temp_seq["pre_quat"] = init_quat
-                            temp_seq["rotated_tr"] = target_tr
-                            temp_seq["rotated_quat"] = target_quat
-                            temp_seq["target_obj_name"] = megaParent_obj.reference_part
-                            path.append(temp_seq)
-                else:
-                    pass
-        return path
-    
-    def is_right_zAxis_for_attach(self, parent_holepins):
-        is_right = False
-        rot_axis = None
-        rot_degrees = None
-
-        hole_z = np.array([0., 0., 0.])
-        for holepin_name, holepin_info in parent_holepins.items():
-            temp_hole_z = holepin_info["real_zAxis"]
-            hole_z[0] += temp_hole_z[0]
-            hole_z[1] += temp_hole_z[1]
-            hole_z[2] += temp_hole_z[2]
-        hole_z = hole_z / len(parent_holepins.keys())
-
-        ref_z = np.array([0, 0, 1])
-
-        degrees = self.AT.get_angles_between_two_vector(hole_z, ref_z)
-        cross_vector = self.AT.get_cross_vector(hole_z, ref_z)
-        '''print("\n---")
-        print(hole_z)
-        print(degrees)
-        print(cross_vector)'''
-
-        if degrees <= 5:
-            is_right = True
-        else:
-            rot_axis = cross_vector
-            rot_degrees = degrees
-
-        return is_right, rot_axis, rot_degrees
-
-    def attachScrew_setting(self, used_obj_holepin_dict, used_obj_dict, path):
-        for obj_name, obj in used_obj_dict.items():
-            if obj_name not in used_obj_holepin_dict.keys():
-                continue
-
-            if obj_name not in self.attachScrew_list:
-                continue
-            for holepin_name, holepin_info in obj.assem_HolePins.items():
-                mate_holepin_name = used_obj_holepin_dict[obj_name][holepin_name]["contact_with"]
-                mate_obj = self.get_obj_by_holepin(used_obj_dict, mate_holepin_name)
-
-                if mate_obj is not None:
-                    if self.attachPart in mate_obj.components.keys(): 
-                        mate_holepin = mate_obj.assem_HolePins[mate_holepin_name]
-                        is_aligned_zAxis = self.is_right_zAxis_for_attachScrew(mate_holepin)
-                        if is_aligned_zAxis:
-                            temp_seq = {}
-                            temp_seq["parent_obj_name"] = mate_obj.reference_part
-                            temp_seq["parent_holepin_names"] = [mate_holepin_name]
-                            temp_seq["child_obj_name"] = obj.reference_part
-                            temp_seq["child_holepin_names"] = [holepin_name]
-                            temp_seq["assembly_type"] = "attachScrew"
-                            path.append(temp_seq)
-
-                            self.assembly_task(
-                                used_obj_dict,
-                                mate_obj, [mate_holepin_name],
-                                obj, [holepin_name]
-                            )
-                            print("")
-                            rospy.logwarn(mate_obj.reference_part)
-                            rospy.logwarn(obj.reference_part)
-        return path
-
-    def is_right_zAxis_for_attachScrew(self, hole_info):
-        is_right = False
-        ref_z = np.array([0, 0, 1])
-        hole_z = hole_info["real_zAxis"]
-        degrees = self.AT.get_angles_between_two_vector(ref_z, hole_z)
-        if degrees <= 5:
-            is_right = True
-        return is_right
             
 
     def get_candidates(self, used_obj_holepin_dict, used_obj_dict):
@@ -855,18 +718,52 @@ class Core_for_Seq_Generation(Sim_Core):
 
 
 import sys
-import Interface_for_robot 
+#import Interface_for_robot 
+import Control_robot
+
+from gazebo_msgs.srv import GetPhysicsProperties
+from gazebo_msgs.srv import SetPhysicsProperties
+
+import matplotlib.pyplot as plt
+
+from ref_seqs import ref_seq
 
 class Core_Main(Core_for_Seq_Generation):
     def __init__(self, is_sim=False, cowork=False, start_at_specific_point=False):
         super(Core_Main, self).__init__(is_sim, cowork, start_at_specific_point)
-        self.IR = Interface_for_robot.InterfaceForRobot(cowork)
+        self.client_get_physics = rospy.ServiceProxy("gazebo/get_physics_properties", \
+            GetPhysicsProperties)
+        self.client_set_physics = rospy.ServiceProxy("gazebo/set_physics_properties", \
+            SetPhysicsProperties)
+
+        self.client_initSpawn()
+        self.gazebo_setting()
+
+        robot_description = "/robot_description"
+        joint_state_topic = ["joint_states:=/joint_states"]
+
+        self.IR = Control_robot.BasicController(robot_description, joint_state_topic)
+
+        self.total_time = 0
+        self.time_list = []
+
+        self.ref_seq = [ref_seq]
+        
+
+    def gazebo_setting(self):
+        temp_phisics = self.client_get_physics()
+        temp_phisics.gravity.z = 0.0
+        self.client_set_physics(temp_phisics.time_step,
+                                temp_phisics.max_update_rate,
+                                temp_phisics.gravity,
+                                temp_phisics.ode_config)
+        self.client_unpause()
 
     def main(self):
         seq = copy.deepcopy(self.assembly_seq)
+        #seq = copy.deepcopy(self.ref_seq)
         obj_dict = copy.deepcopy(self.stefan_dict)
 
-        self.IR.publish_init_tf(obj_dict)
 
         for assembly_unit in seq:
             print("\n##############################################")
@@ -877,10 +774,11 @@ class Core_Main(Core_for_Seq_Generation):
             for idx in range(len(assembly_unit)):
                 print("\n--- {} / {} ---".format(idx+1, len(assembly_unit)))
                 current_task = assembly_unit[idx]
+                pprint(self.time_list)
 
                 while True:
                     pprint(current_task)
-                    obj_dict, success = self.process_current_task(obj_dict, current_task)
+                    obj_dict, success = self.process_current_task_sim(obj_dict, current_task)
                     if success:
                         break
                     else:
@@ -899,8 +797,9 @@ class Core_Main(Core_for_Seq_Generation):
                             break
                         else:
                             sys.exit()
-    
-    def process_current_task(self, obj_dict, task):
+            
+
+    def process_current_task_sim(self, obj_dict, task):
         success = False
         temp_dict = copy.deepcopy(obj_dict)
 
@@ -917,59 +816,45 @@ class Core_Main(Core_for_Seq_Generation):
             
             tr, quat, ref_axis, criterion, can_assembly = \
                 self.AT.get_AsmPose_by_HolePin(parent_obj, parent_holepin_names, child_obj, child_holepin_names)
-            parent_tf_names, child_tf_names = self.get_tf_names(parent_holepin_names, child_holepin_names, criterion)
-            resp_HoleCheck = self.IR.send_msg_for_HoleCheck(assembly_type, parent_obj_name, parent_tf_names, child_obj_name, child_tf_names)
+            if can_assembly:
 
-            if resp_HoleCheck.result:
-                self.IR.send_redetected_holepin_tf(\
-                    parent_obj, parent_holepin_names, criterion)
+                self.assembly_task(
+                    temp_dict,
+                    parent_obj, parent_holepin_names,
+                    child_obj, child_holepin_names
+                )
+                success = True
+                sub_obj = temp_dict[parent_obj_name]
+                #self.spawn_subObject(parent_obj, child_obj, sub_obj)
 
-                tr, quat, ref_axis, criterion, can_assembly = \
-                    self.AT.get_AsmPose_by_HolePin(parent_obj, parent_holepin_names, child_obj, child_holepin_names)
-                if can_assembly:
-                    self.IR.send_msg_for_RobotControl(assembly_type, parent_obj_name, parent_tf_names, child_obj_name, child_tf_names)
+               
 
-                    self.assembly_task(
-                        temp_dict,
-                        parent_obj, parent_holepin_names,
-                        child_obj, child_holepin_names
-                    )
-                    
-                    success = True
-                    sub_obj = temp_dict[parent_obj_name]
-                    self.IR.send_component_tf(parent_obj, sub_obj)
+                target_arm_name, target_arm, target_obj_pose = \
+                    self.get_target_arm(child_obj_name)
+                rospy.logwarn(target_arm_name)
+                self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.2))
+                self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.1))
+                #self.IR.grasp_control(target_arm_name, True)
+                self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.2))
+                self.delete_obj_in_sim(child_obj_name)
+
+
+                asm_pose = self.get_pose_by_tr_quat(tr, quat)
+                real_asm_pose = self.get_asm_pose_in_gazebo(parent_obj_name, asm_pose, 0.2)
+                self.time_list.append(self.IR.movel_just_tr(target_arm, real_asm_pose))
+                real_asm_pose = self.get_asm_pose_in_gazebo(parent_obj_name, asm_pose, 0.1)
+                self.time_list.append(self.IR.movel_just_tr(target_arm, real_asm_pose))
+                #self.IR.grasp_control(target_arm_name, False)
+
+                self.spawn_subObject(parent_obj, child_obj, sub_obj)
+
+                real_asm_pose = self.get_asm_pose_in_gazebo(parent_obj_name, asm_pose, 0.2)
+                self.time_list.append(self.IR.movel_just_tr(target_arm, real_asm_pose))
+
+                
+                self.time_list.append(self.IR.move_by_target(target_arm, target_arm_name, "ready"))
+
         
-        elif assembly_type=="attach":
-            parent_obj_name = task["parent_obj_name"]
-            parent_obj = obj_dict[parent_obj_name]
-            parent_holepin_names = task["parent_holepin_names"]
-            child_obj_name = task["child_obj_name"]
-            child_obj = obj_dict[child_obj_name]
-            child_holepin_names = task["child_holepin_names"]
-            
-            tr, quat, ref_axis, criterion, can_assembly = \
-                self.AT.get_AttachPose(parent_obj, parent_holepin_names, child_obj, child_holepin_names)
-            parent_tf_names, child_tf_names = self.get_attach_tf_names(parent_holepin_names, child_holepin_names)
-            resp_HoleCheck = self.IR.send_msg_for_HoleCheck(assembly_type, parent_obj_name, parent_tf_names, child_obj_name, child_tf_names)
-
-            if resp_HoleCheck.result:
-                self.IR.send_redetected_holepin_tf(\
-                    parent_obj, parent_holepin_names, criterion)
-
-                tr, quat, ref_axis, criterion, can_assembly = \
-                    self.AT.get_AttachPose(parent_obj, parent_holepin_names, child_obj, child_holepin_names)
-                if can_assembly:
-                    self.IR.send_msg_for_RobotControl(assembly_type, parent_obj_name, parent_tf_names, child_obj_name, child_tf_names)
-
-                    self.attach_task(
-                        temp_dict,
-                        parent_obj, parent_holepin_names,
-                        child_obj, child_holepin_names
-                    )
-                    
-                    success = True
-                    sub_obj = temp_dict[parent_obj_name]
-                    self.IR.send_component_tf(parent_obj, sub_obj)
 
         elif assembly_type=="lift":
             ###################################################
@@ -993,62 +878,90 @@ class Core_Main(Core_for_Seq_Generation):
 
             obj.real_pose_mat = rotated_real_pose
             obj.update_real_holepin_pose()
-            self.IR.update_just_parent_tf_stl(obj)
             success = True
+
+            self.spawn_updated_obj(obj)
 
         elif assembly_type=="rotate":
             ###################################################
             ############# Interface ###########################
             ###################################################
 
-            megaParent_obj = temp_dict[task["target_obj_name"]]
+            if "unvalid" not in task.keys():
+                megaParent_obj = temp_dict[task["target_obj_name"]]
 
-            target_real_tr = task["rotated_tr"]
-            target_real_quat = task["rotated_quat"]
-            target_real_mat = megaParent_obj.get_tf_matrix(target_real_tr, target_real_quat)
-            megaParent_obj.real_pose_mat = target_real_mat
-            megaParent_obj.update_real_holepin_pose()
+                target_real_tr = task["rotated_tr"]
+                target_real_quat = task["rotated_quat"]
+                target_real_mat = megaParent_obj.get_tf_matrix(target_real_tr, target_real_quat)
+                megaParent_obj.real_pose_mat = target_real_mat
+                megaParent_obj.update_real_holepin_pose()
 
-            self.IR.update_just_parent_tf_stl(megaParent_obj)
-            self.IR.update_component_stl(megaParent_obj)
+                #self.IR.update_just_parent_tf_stl(megaParent_obj)
+                #self.IR.update_component_stl(megaParent_obj)
+                
+
+                self.spawn_updated_obj(megaParent_obj)
+            
+            target_obj_name = task["target_obj_name"]
+            target_arm_name, target_arm, target_obj_pose = \
+                    self.get_target_arm(target_obj_name)
+            self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.2))
+            self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.1))
+            #self.IR.grasp_control(target_arm_name, True)
+            self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.2))
+            self.time_list.append(10)
+            self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.1))
+            self.time_list.append(self.IR.approach_to_obj(target_arm, target_obj_pose, 0.2))
+            self.time_list.append(self.IR.move_by_target(target_arm, target_arm_name, "ready"))
             success = True
-
         return temp_dict, success
-    
-    def get_tf_names(self, parent_holepin_names, child_holepin_names, criterion):
-        parent_tf_names = []
-        child_tf_names = []
-        for holepin_name1, holepin_name2, cri in zip(parent_holepin_names, child_holepin_names, criterion):
-            parent_tf_names.append(holepin_name1 + "_{}".format(cri))
-            child_tf_names.append(holepin_name2 + "_{}".format(cri))
-        return parent_tf_names, child_tf_names
 
-    def get_attach_tf_names(self, parent_holepin_names, child_holepin_names):
-        parent_tf_names = []
-        child_tf_names = []
-        for holepin_name1, holepin_name2 in zip(parent_holepin_names, child_holepin_names):
-            parent_tf_names.append(holepin_name1 + "_end")
-            child_tf_names.append(holepin_name2 + "_entry")
-        return parent_tf_names, child_tf_names
+    def get_target_arm(self, obj_name):
+        arm1_base = self.IR.arm1_base
+        arm2_base = self.IR.arm2_base
 
-    def update_redetected_holepins(self, resp, target_obj, target_holepin_names, criterion):
-        print(resp)
-        for idx in range(len(target_holepin_names)):
-            target_holepin_name = target_holepin_names[idx]
-            target_holepin = target_obj.assem_HolePins[target_holepin_name]
-            entry_or_end = criterion[idx]
-            target_holepin_mat = target_holepin[entry_or_end + "_coordinate"]
-            redetected_pose = resp.holepin_pose[idx]
-            re_tr, _ = self.IR.get_xyz_quat_from_tfpose(redetected_pose)
+        pose_to_arm1 = self.client_getModel(obj_name, arm1_base)
+        pose_to_arm2 = self.client_getModel(obj_name, arm2_base)
+        
+        dist_to_arm1 = self.dist_from_pose(pose_to_arm1.pose)
+        dist_to_arm2 = self.dist_from_pose(pose_to_arm2.pose)
+        rospy.logwarn(dist_to_arm1)
+        rospy.logwarn(dist_to_arm2)
+         
+        if dist_to_arm1 >= dist_to_arm2:
+            return "arm2", self.IR.arm2, self.client_getModel(obj_name, "table").pose
+        else:
+            return "arm1", self.IR.arm1, self.client_getModel(obj_name, "table").pose
 
-            rospy.logwarn("\nUpdate redetected holepin '{}'".format(target_holepin_name))
-            pprint(tf.translation_from_matrix(target_holepin_mat))
-            target_holepin_mat[0, 3] = re_tr[0]
-            target_holepin_mat[1, 3] = re_tr[1]
-            target_holepin_mat[2, 3] = re_tr[2]
-            pprint(tf.translation_from_matrix(target_holepin_mat))
+    def dist_from_pose(self, pose):
+        x = pose.position.x
+        y = pose.position.y
+        z = pose.position.z 
+        vec = np.array([x, y, z])
+        return np.linalg.norm(vec)
 
+    def get_asm_pose_in_gazebo(self, obj_name, asm_pose, z_offset):
+        obj_pose = self.client_getModel(obj_name, "table").pose
+        obj_tf_mat = self.get_tf_mat_from_pose(obj_pose)
+        asm_tf_mat = self.get_tf_mat_from_pose(asm_pose)
+        target_tf_mat = tf.concatenate_matrices(obj_tf_mat, asm_tf_mat)
+        target_tr = list(tf.translation_from_matrix(target_tf_mat))
+        target_tr[2] += z_offset
+        target_quat = tf.quaternion_from_matrix(target_tf_mat)
+        return self.get_pose_by_tr_quat(target_tr, target_quat)
 
+    def get_tf_mat_from_pose(self, pose):
+        tr = [pose.position.x, pose.position.y, pose.position.z]
+        quat = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
+        return self.AT.get_tf_matrix(tr, quat)
+
+    def shutdown_hook(self):
+        step = np.arange(1, len(self.time_list)+1)
+        print("Falure counts: {}".format(len(self.time_list) - np.count_nonzero(self.time_list)))
+        print("Total times: {}".format(np.sum(self.time_list)))
+        print("Total steps: {}".format(len(self.time_list)))
+        plt.bar(step, self.time_list)
+        plt.show()
 
 
         
@@ -1059,9 +972,11 @@ class Core_Main(Core_for_Seq_Generation):
 #core = Sim_Core(is_sim=True)
 #core.spawn_final_obj()
 
-core = Core_for_Seq_Generation(cowork=True)
+#core = Core_for_Seq_Generation(cowork=True)
 
-#core = Core_Main(cowork=True)
+
+core = Core_Main(is_sim=True, cowork=False)
+rospy.on_shutdown(core.shutdown_hook)
 #pprint(core.re_final_dict)
 
-#core.main()
+core.main()

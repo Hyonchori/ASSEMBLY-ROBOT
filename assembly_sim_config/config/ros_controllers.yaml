@@ -52,22 +52,22 @@ controller_list:
       - robot2_wrist_1_joint
       - robot2_wrist_2_joint
       - robot2_wrist_3_joint
-hand2_controller:
-  type: position_controllers/JointPositionController
-  joints:
-    robot2_gripper_finger1_joint
-  gains:
-    robot2_gripper_finger1_joint:
-      p: 100
-      d: 1
-      i: 1
-      i_clamp: 1
 hand1_controller:
   type: position_controllers/JointPositionController
   joints:
     robot1_gripper_finger1_joint
   gains:
     robot1_gripper_finger1_joint:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+hand2_controller:
+  type: position_controllers/JointPositionController
+  joints:
+    robot2_gripper_finger1_joint
+  gains:
+    robot2_gripper_finger1_joint:
       p: 100
       d: 1
       i: 1

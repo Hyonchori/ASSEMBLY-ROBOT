@@ -89,7 +89,7 @@
     <joint name="robot2_joint" type="fixed">
         <parent link="table" />
         <child link = "robot2_base_link" />
-        <origin xyz="1.0 0.0 0.01" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.75 0.0 0.01" rpy="0.0 0.0 0.0" />
     </joint>
 
 </robot>

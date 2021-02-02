@@ -86,7 +86,7 @@ class Object_Spawner():
                 target_path = os.path.join(target_dir, target_file)
                 ref_name, part_name, xyz, rpy = \
                     self.read_txt(target_path)
-                xyz[2] += 0.82
+                xyz[2] += 0.80
 
                 name_split = target_file.split(".")[0]
                 param_name = name_split.split("_")[0]

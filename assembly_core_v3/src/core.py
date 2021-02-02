@@ -384,6 +384,13 @@ class SimCore(InitialCore):
         self.delete_obj_in_sim(child_obj.referencePart)
         self.spawn_obj(sub_obj, parent_pose, "world")
     
+    def spawn_updated_obj(self, obj, reference="world"):
+        obj_tf = obj.real_pose_mat
+        obj_xyz = tf.translation_from_matrix(obj_tf)
+        obj_quat = tf.quaternion_from_matrix(obj_tf)
+        obj_pose = self.get_pose_by_tr_quat(obj_xyz, obj_quat)
+        self.spawn_obj(obj, obj_psoe, reference)
+    
     def delete_obj_in_sim(self, obj_name):
         already = self.is_in_gazebo(obj_name)
         if not already:

@@ -1,0 +1,48 @@
+<launch>
+	<arg name="robot_name" default="robot_sim"/>
+	<arg name="z_offset" default="0.79"/>
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="paused" default="false"/>
+		<arg name="gui" default="true"/>
+	</include>
+
+	<param name="robot_description"
+		command="$(find xacro)/xacro $(find assembly_sim)/urdf/sim_robot.urdf.xacro"/>
+	
+	<node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+		<param name="tf_prefix" value="$(arg robot_name)"/>
+	</node>
+
+	<node name="world_to_simul_robot_world" type="static_transform_publisher" pkg="tf2_ros" 
+		args="0 0 $(arg z_offset) 0 0 0 origin $(arg robot_name)/world"/>
+
+	<node name="spawn_ur_robot" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+		args="-urdf -param robot_description -urdf -model $(arg robot_name) -z $(arg z_offset)"/>
+
+	<rosparam file="$(find assembly_sim)/config/robot_controllers.yaml" command="load"/>
+	<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="true"
+                        output="screen" args="joint_state_controller
+                                            arm1_controller
+                                            hand1_controller
+											arm2_controller
+											hand2_controller"/>
+	
+	<include file="$(find assembly_sim_config)/launch/move_group.launch"/>
+
+	<arg name="urdf_path" default="$(find object_description)/urdfs"/>
+    <node name="obj_spawn_init" pkg="assembly_gazebo" type="obj_spawn.py" output="screen" respawn="false"
+        launch-prefix="bash -c 'sleep 3.0; $0 $@' ">
+        <param name="stefan_part1_1_description" command="$(find xacro)xacro $(arg urdf_path)/part1.SLDPRT/urdf/part1.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part2_1_description" command="$(find xacro)xacro $(arg urdf_path)/part2.SLDPRT/urdf/part2.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part3_1_description" command="$(find xacro)xacro $(arg urdf_path)/part3.SLDPRT/urdf/part3.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part4_1_description" command="$(find xacro)xacro $(arg urdf_path)/part4.SLDPRT/urdf/part4.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part5_1_description" command="$(find xacro)xacro $(arg urdf_path)/part5.SLDPRT/urdf/part5.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_part6_1_description" command="$(find xacro)xacro $(arg urdf_path)/part6.SLDPRT/urdf/part6.SLDPRT_HolePin.xacro"/>
+
+        <param name="stefan_C101350_14_description" command="$(find xacro)xacro $(arg urdf_path)/C101350.SLDPRT/urdf/C101350.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_C104322_6_description" command="$(find xacro)xacro $(arg urdf_path)/C104322.SLDPRT/urdf/C104322.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_C122620_4_description" command="$(find xacro)xacro $(arg urdf_path)/C122620.SLDPRT/urdf/C122620.SLDPRT_HolePin.xacro"/>
+        <param name="stefan_C122925_4_description" command="$(find xacro)xacro $(arg urdf_path)/C122925.SLDPRT/urdf/C122925.SLDPRT_HolePin.xacro"/>
+	</node>
+</launch>
